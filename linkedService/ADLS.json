@@ -1,0 +1,12 @@
+{
+	"name": "ADLS",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://rawadlsdev.dfs.core.windows.net/",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDk1NzkxMTVELUJBNzUtNDNBQy1CM0M1LTExM0JEODIyRkY1M19hMGFhNjFhNC00YTBhLTRmODUtOWMyNi0xNjMwNDQ4YTQ1ZWEiDQp9"
+		}
+	}
+}

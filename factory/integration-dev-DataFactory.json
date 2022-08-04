@@ -1,0 +1,9 @@
+{
+	"name": "integration-dev-DataFactory",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "1de88eba-3515-4e68-9070-e32584301cba",
+		"tenantId": "44ef6169-c779-4407-8bb3-6365c5faf904"
+	}
+}
