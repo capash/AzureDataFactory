@@ -1,0 +1,124 @@
+name: cicdtesting_adf_workflow
+on: 
+  push:
+    branches:
+      - master
+    
+  workflow_dispatch:
+
+env:
+  # Variables subject to change depending on target
+  tenantId: 44ef6169-c779-4407-8bb3-6365c5faf904
+  factoryDirectory1: /
+  artifactName: adf_armtemplate
+  armParameterFile: arm-template-parameters-definition.json
+  sourceFactoryName1: integration-dev-DataFactory
+  sourceSubscriptionId: 1862fc9f-56e3-4bfb-bcce-a5561ec359b0
+  sourceResourceGroupName: RG-Dev
+  targetFactoryName1: integration-test-DataFactory
+  targetSubscriptionId: 1862fc9f-56e3-4bfb-bcce-a5561ec359b0
+  targetResourceGroupName: RG-Dev
+jobs:
+  validate_and_generate:
+    runs-on: ubuntu-latest
+    env:
+      npmString: /subscriptions/$sourceSubscriptionId/resourceGroups/$sourceResourceGroupName/providers/Microsoft.DataFactory/factories/$sourceFactoryName1
+    steps:
+      # Checkout current branch
+      - name: Checkout 
+        uses: actions/checkout@v1
+      # Install Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '10.x'
+      # Install npm packages saved in package.json file in the build
+      - name: Install npm package
+        run: npm install
+      # Validate all ADF resources
+      - name: Validate
+        run: npm run build validate $factoryDirectory1 $npmString
+      # Generate ARM Template
+      - name: Generate ARM Template
+        run: npm run build export $factoryDirectory1 $npmString $artifactName
+      # Copy parameters files for destination data factory
+      #- name: Copy Applicable Parameter File
+      #  run: cp "$factoryDirectory/$armParameterFile" $artifactName
+      # List artifact files
+      - name: List Artifact Files
+        run: ls $artifactName
+      # Upload ARM Template to Workflow Artifacts
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.artifactName }}
+          path: ${{ env.artifactName }}
+  deploy:
+    needs: validate_and_generate
+    environment: non-production # !! Change depending on target environment
+    runs-on: ubuntu-latest
+    steps:
+      # Download ARM Template from Workflow Artifacts
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.artifactName }}
+          path: ${{ env.artifactName }}
+      # Initiate connection to Azure
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          enable-AzPSSession: true
+        env: # Or as an environment variable
+          credentials: ${{ secrets.AZURE_CREDENTIALS }}
+      # Validate ARM Template
+      - name: Validate Deployment
+        uses:  azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ env.targetSubscriptionId }}
+          resourceGroupName: ${{ env.targetResourceGroupName }}
+          template: ${{ env.artifactName }}/ARMTemplateForFactory.json
+          parameters: ${{ env.artifactName }}/${{ env.armParameterFile }}
+          deploymentMode: Validate
+      # Execute Adf Pre-Deployment Script
+      - name: Pre-Deployment Script
+        uses: azure/powershell@v1
+        with:
+          inlineScript: |
+            Set-Location ${{ env.artifactName }}
+            ./PrePostDeploymentScript.ps1 `
+              -armTemplate ARMTemplateForFactory.json `
+              -ResourceGroupName ${{ env.targetResourceGroupName }} `
+              -DataFactoryName ${{ env.targetFactoryName1 }} `
+              -predeployment $true `
+              -deleteDeployment $false
+          azPSVersion: latest
+      # Deploy ARM Template
+      - name: Deployment 
+        uses: azure/powershell@v1
+        with:
+          inlineScript: |
+            New-AzResourceGroupDeployment `
+              -ResourceGroupName ${{ env.targetResourceGroupName }} `
+              -TemplateFile ${{ env.artifactName }}/ARMTemplateForFactory.json `
+              -TemplateParameterFile ${{ env.artifactName }}/${{ env.armParameterFile }} `
+              -factoryName sd-CloudAnalyticsPlatform-DataFactory-test `
+              -Verbose
+          azPSVersion: latest
+      # Execute Adf Post-Deployment Script
+      - name: Post-Deployment Script
+        uses: azure/powershell@v1
+        with:
+          inlineScript: |
+            Set-Location ${{ env.artifactName }}
+            ./PrePostDeploymentScript.ps1 `
+              -armTemplate ARMTemplateForFactory.json `
+              -ResourceGroupName ${{ env.targetResourceGroupName }} `
+              -DataFactoryName ${{ env.targetFactoryName1 }} `
+              -predeployment $false `
+              -deleteDeployment $false
+          azPSVersion: latest 
+      # Checkout current branch
+      - name: Checkout 
+        uses: actions/checkout@v1
