@@ -9,7 +9,7 @@ on:
 env:
   # Variables subject to change depending on target
   tenantId: 44ef6169-c779-4407-8bb3-6365c5faf904
-  factoryDirectory1: /
+  factoryDirectory1: $GITHUB_WORKSPACE/
   artifactName: adf_armtemplate
   armParameterFile: arm-template-parameters-definition.json
   sourceFactoryName1: integration-dev-DataFactory
