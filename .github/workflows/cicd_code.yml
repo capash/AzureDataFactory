@@ -78,7 +78,7 @@ jobs:
         with:
           subscriptionId: ${{ env.targetSubscriptionId }}
           resourceGroupName: ${{ env.targetResourceGroupName }}
-          template: ${{ env.artifactName }}/ARMTemplateForFactory.json
+          template: ${{ env.artifactName }}\ARMTemplateForFactory.json
           parameters: ${{ env.artifactName }}/${{ env.armParameterFile }}
           deploymentMode: Validate
       # Execute Adf Pre-Deployment Script
