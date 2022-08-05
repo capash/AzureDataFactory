@@ -78,7 +78,7 @@ jobs:
         with:
           subscriptionId: ${{ env.targetSubscriptionId }}
           resourceGroupName: ${{ env.targetResourceGroupName }}
-          template: $GITHUB_WORKSPACE/arm-template-parameters-definition.json
+          template: ./azuredeploy.json
           parameters: master/arm-template-parameters-definition.json
           deploymentMode: Validate
       # Execute Adf Pre-Deployment Script
