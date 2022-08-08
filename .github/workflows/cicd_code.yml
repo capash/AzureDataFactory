@@ -46,7 +46,7 @@ jobs:
       
       # Copy parameters files for destination data factory
       - name: Copy Applicable Parameter File
-        run: cp ${GITHUB_WORKSPACE}"$armParameterFile" $artifactName
+        run: cp ${GITHUB_WORKSPACE}"/""$armParameterFile" $artifactName
       # List artifact files
       - name: List Artifact Files
         run: ls $artifactName
