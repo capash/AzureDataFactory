@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "factoryName": {
+            "value": "integration-test-DataFactory"
+        },
+        "ADLS_accountKey": {
+            "value": "c+eZYK/JPgdknG9bA0kVroyfnIiTBgTEzE6Gbz67Zy4MczjODRSFGjEMFgGmieZ8oVOhhPThXrCn+AStXp+D8w=="
+        },
+        "ADLS_properties_typeProperties_url": {
+            "value": "https://rawadlstest.dfs.core.windows.net/"
+        }
+    }
+}
