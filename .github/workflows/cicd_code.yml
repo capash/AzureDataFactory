@@ -78,8 +78,8 @@ jobs:
         with:
           subscriptionId: ${{ env.targetSubscriptionId }}
           resourceGroupName: ${{ env.targetResourceGroupName }}
-          template: ./azuredeploy.json
-          parameters: master/arm-template-parameters-definition.json
+          template: ${{ env.artifactName }}/ARMTemplateForFactory.json
+          parameters: ${{ env.artifactName }}/${{ env.armParameterFile }}
           #deploymentMode: Validate
       # Execute Adf Pre-Deployment Script
       - name: Pre-Deployment Script
