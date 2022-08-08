@@ -42,11 +42,11 @@ jobs:
       - name: Generate ARM Template
         run: npm run build export $factoryDirectory1 $npmString $artifactName
       - name: test path
-        run: echo ${GITHUB_WORKSPACE} "$armParameterFile"
+        run: echo ${GITHUB_WORKSPACE}"/""$armParameterFile"
       
       # Copy parameters files for destination data factory
       - name: Copy Applicable Parameter File
-        run: cp $factoryDirectory1"$armParameterFile" $artifactName
+        run: cp ${GITHUB_WORKSPACE}"$armParameterFile" $artifactName
       # List artifact files
       - name: List Artifact Files
         run: ls $artifactName
