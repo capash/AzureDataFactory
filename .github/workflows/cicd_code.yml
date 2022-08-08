@@ -2,7 +2,7 @@ name: cicdtesting_adf_workflow
 on: 
   push:
     branches:
-      - abcd
+      - master
     
   workflow_dispatch:
 
@@ -11,7 +11,7 @@ env:
   tenantId: 44ef6169-c779-4407-8bb3-6365c5faf904
   factoryDirectory1: $GITHUB_WORKSPACE/
   artifactName: adf_armtemplate
-  armParameterFile: ARMTemplateParametersForFactory.json #NotToBeChanged
+  armParameterFile: ARMTemplateParametersForFactory.json
   sourceFactoryName1: integration-dev-DataFactory
   sourceSubscriptionId: 1862fc9f-56e3-4bfb-bcce-a5561ec359b0
   sourceResourceGroupName: RG-Dev
@@ -42,8 +42,8 @@ jobs:
       - name: Generate ARM Template
         run: npm run build export $factoryDirectory1 $npmString $artifactName
       # Copy parameters files for destination data factory
-      #- name: Copy Applicable Parameter File
-      #  run: cp "$factoryDirectory/$armParameterFile" $artifactName
+      - name: Copy Applicable Parameter File
+        run: cp "$factoryDirectory1/$armParameterFile" $artifactName
       # List artifact files
       - name: List Artifact Files
         run: ls $artifactName
