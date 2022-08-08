@@ -11,7 +11,7 @@ env:
   tenantId: 44ef6169-c779-4407-8bb3-6365c5faf904
   factoryDirectory1: $GITHUB_WORKSPACE/
   artifactName: adf_armtemplate
-  armParameterFile: arm-template-parameters-definition.json
+  armParameterFile: ARMTemplateParametersForFactory.json
   sourceFactoryName1: integration-dev-DataFactory
   sourceSubscriptionId: 1862fc9f-56e3-4bfb-bcce-a5561ec359b0
   sourceResourceGroupName: RG-Dev
