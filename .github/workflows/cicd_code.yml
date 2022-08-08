@@ -43,7 +43,7 @@ jobs:
         run: npm run build export $factoryDirectory1 $npmString $artifactName
       # Copy parameters files for destination data factory
       - name: Copy Applicable Parameter File
-        run: cp "$factoryDirectory1$armParameterFile" $artifactName
+        run: cp $factoryDirectory1"$armParameterFile" $artifactName
       # List artifact files
       - name: List Artifact Files
         run: ls $artifactName
